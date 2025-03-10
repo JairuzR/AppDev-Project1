@@ -8,5 +8,5 @@ public interface Recompense {
      * @param amount Amount of money to be recompensed.
      * @return Flag if compensation was successful.
      */
-    public boolean recompense(double amount);
+    boolean recompense(double amount);
 }
