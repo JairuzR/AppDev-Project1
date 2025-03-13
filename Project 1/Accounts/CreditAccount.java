@@ -7,19 +7,19 @@ import Bank.Bank;
 public class CreditAccount extends Account implements Payment, Recompense {
 
     private double loan;
-    
+
     /**
-     * Constructs a Credit Account.
-     * 
-     * @param bank         The bank managing the account.
-     * @param accountNum   Unique account number.
-     * @param OWNERFNAME   First name of the account owner.
-     * @param OWNERLNAME   Last name of the account owner.
-     * @param OWNEREMAIL   Email of the account owner.
-     * @param pin          Security PIN.
+     * Constructs a credit amount.
+     *
+     * @param bank          The bank.
+     * @param ACCOUNTNUMBER The account number.
+     * @param OWNERFNAME    The owners first name.
+     * @param OWNERLNAME    The owners last name.
+     * @param OWNEREMAIL    The owners email.
+     * @param pin           The owners pin.
      */
-    public CreditAccount(Bank bank, String accountNum, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin) {
-        super(bank, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin);
+    public CreditAccount(Bank bank, String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin) {
+        super(bank, ACCOUNTNUMBER, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin);
         this.loan = 0.0;
     }
     

@@ -1,5 +1,8 @@
 package Bank;
 
+import Accounts.*;
+import java.util.ArrayList;
+
 public class Bank {
 
     private int ID;
@@ -15,11 +18,27 @@ public class Bank {
     
 
     public Bank(int ID, String name, String passcode) {
+        this.ID = ID;
+        this.name = name;
+        this.passcode = passcode;
+//        TODO: add stuff here!
+//        this.DEPOSITLIMIT = // add limit
+//        this.WITHDRAWLIMIT = // add limit
+//        this.CREDITLIMIT = // add limit
+//        this.processingFee = // add processingfee
+        BANKACCOUNTS = new ArrayList<>();
 
     }
 
     public Bank(int ID, String name, String passcode, double DEPOSITLIMIT, double WITHDRAWLIMIT, double CREDITLIMIT, double processingFee) {
-
+        this.ID = ID;
+        this.name = name;
+        this.passcode = passcode;
+        this.DEPOSITLIMIT = DEPOSITLIMIT;
+        this.WITHDRAWLIMIT = WITHDRAWLIMIT;
+        this.CREDITLIMIT = CREDITLIMIT;
+        this.processingFee = processingFee;
+        BANKACCOUNTS = new ArrayList<>();
     }
 
     public void showAccounts(Class accountType) {
@@ -47,11 +66,11 @@ public class Bank {
     }
     
     public static boolean accountExists(Bank bank, String accountNum) {
-        
+
     }
 
     public String toString() {
-
+        return String.format("Bank ID %s: %s", ID, name);
     }
 
 }

@@ -3,7 +3,7 @@ package Accounts;
 import Bank.Bank;
 import java.util.ArrayList;
 
-public abstract  class Account {
+public abstract class Account {
 
     private Bank bank;
 
@@ -15,26 +15,39 @@ public abstract  class Account {
 
     private ArrayList<Transaction> Transactions;
 
-
-
-    public Account(bank bank, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin) {
-        
+    /**
+     *
+     * @param bank
+     * @param ACCOUNTNUMBER
+     * @param OWNERFNAME
+     * @param OWNERLNAME
+     * @param OWNEREMAIL
+     * @param pin
+     */
+    public Account(Bank bank, String ACCOUNTNUMBER,String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin) {
+        this.bank = bank;
+        this.ACCOUNTNUMBER = ACCOUNTNUMBER;
+        this.OWNERFNAME = OWNERFNAME;
+        this.OWNERLNAME = OWNERLNAME;
+        this.OWNEREMAIL = OWNEREMAIL;
+        this.pin = pin;
+        Transactions = new ArrayList<>();
     }
 
+    /**
+     * Gets the full name of the account owner.
+     *
+     * @return Full name in "First Last" format.
+     */
     public String getOwnerFullName() {
-
+        return OWNERFNAME + " " + OWNERLNAME;
     }
 
-    publis void addNewTransaction(String accountNum, Transaction.Transactions type, String description) {
 
+    public void addNewTransaction(String accountNum, Transaction.Transactions type, String description) {
+        Transactions.add(new Transaction(accountNum, type, description));
     }
 
-    public String getTransactions() {
-        
-    }
+    public String toString() { return String.format("Account number: %s, Owner: %s", this.ACCOUNTNUMBER, getOwnerFullName()); }
 
-    public String toString() {
-        
-    }
-    
 }
