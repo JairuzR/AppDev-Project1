@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import Accounts.*;
 
 public class Bank {
-    // Fields as shown in the UML
     private int ID;
     private String name, passcode;
     private double DEPOSITLIMIT, WITHDRAWLIMIT, CREDITLIMIT;
@@ -87,7 +86,6 @@ public class Bank {
     // Method to create a new general account
     public ArrayList<String> createNewAccount() {
         ArrayList<String> accountDetails = new ArrayList<>();
-        // Implementation as per UML
         String accountNumber = generateAccountNumber();
         accountDetails.add(accountNumber);
         return accountDetails;
@@ -122,7 +120,6 @@ public class Bank {
         return false;
     }
 
-    // Additional methods from UML
     
     // Method to get bank info as a string (format: ID, String, String)
     public String getBankInfo() {
