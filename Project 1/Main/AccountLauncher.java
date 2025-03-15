@@ -1,11 +1,11 @@
 package Main;
 
 import Bank.Bank;
+import Accounts.*;
 
 public class AccountLauncher {
     
     private static Account loggedAccount;
-
     private static Bank assocBank;
 
 
@@ -18,7 +18,7 @@ public class AccountLauncher {
 
     }
 
-    private static Bank selectank() {
+    private static Bank selectBank() {
 
     }
 

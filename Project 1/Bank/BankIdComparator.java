@@ -2,7 +2,7 @@ package Bank;
 
 import java.util.Comparator;
 
-public class BankIdComparator {
+public class BankIdComparator implements Comparator<Bank> {
     @Override
     public int compare(Bank b1, Bank b2) {
         if (b1.getID() == b2.getID() && b1.getPasscode().equals(b2.getPasscode())) {

@@ -6,9 +6,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class SavingsAccount extends Account implements Deposit, Withdrawal, FundTransfer {
+
     private double balance; // Account balance
+
+    public double getBalance() {
+        return balance;
+    }
+
     private final ReentrantLock lock = new ReentrantLock();
     private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    
     private static class LockGuard implements AutoCloseable {
         private final ReentrantLock lock;
         public LockGuard(ReentrantLock lock) {
@@ -104,7 +112,7 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
             throw new IllegalAccountType("Transfers can only be made between savings accounts.");
         }
         SavingsAccount recipientAccount = (SavingsAccount) recipient;
-        ReentrantLock firstLock = (this.getAccountNumber().compareTo(recipient.getAccountNumber()) < 0) ? this.lock : recipientAccount.lock;
+        ReentrantLock firstLock = (this.getACCOUNTNUMBER().compareTo(recipient.getACCOUNTNUMBER()) < 0) ? this.lock : recipientAccount.lock;
         ReentrantLock secondLock = (firstLock == this.lock) ? recipientAccount.lock : this.lock;
         try (LockGuard guard1 = new LockGuard(firstLock); LockGuard guard2 = new LockGuard(secondLock)) {
             if (amount > balance) {
@@ -113,7 +121,7 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
             }
             balance -= amount;
             recipientAccount.adjustAccountBalance(amount);
-            logTransaction(Transaction.Transactions.FundTransfer, "Transferred $" + amount + " to Account: " + recipient.getAccountNumber());
+            logTransaction(Transaction.Transactions.FundTransfer, "Transferred $" + amount + " to Account: " + recipient.getACCOUNTNUMBER());
             System.out.println("Transfer successful! New Balance: $" + balance);
             return true;
         }
@@ -149,7 +157,7 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
             SavingsAccount recipientAccount = (SavingsAccount) recipient;
             recipientAccount.adjustAccountBalance(amount);
             logTransaction(Transaction.Transactions.FundTransfer, "Transferred $" + amount + " to Account: " 
-                + recipient.getAccountNumber() + " in Bank: " + recipientBank.getBankName() 
+                + recipient.getACCOUNTNUMBER() + " in Bank: " + recipientBank.getBankName() 
                 + " (Processing Fee: $" + processingFee + ")");
             System.out.println("Cross-bank transfer successful! New Balance: $" + balance);
             return true;
@@ -157,7 +165,7 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
     }
 
     public String getAccountBalanceStatement() {
-        return "Account: " + getAccountNumber() + " | Balance: $" + balance;
+        return "Account: " + getACCOUNTNUMBER() + " | Balance: $" + balance;
     }
 
     private boolean hasEnoughBalance(double amount) {

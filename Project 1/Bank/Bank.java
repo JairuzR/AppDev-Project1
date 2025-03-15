@@ -1,7 +1,7 @@
 package Bank;
 
 import java.util.ArrayList;
-import Accounts.Account;
+import Accounts.*;
 
 public class Bank {
     // Fields as shown in the UML
@@ -11,12 +11,46 @@ public class Bank {
     private double processingFee;
     private ArrayList<Account> BANKACCOUNTS;
 
+    // Getters    
+    public int getID() {
+        return ID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPasscode() {
+        return passcode;
+    }
+
+    public double getDEPOSITLIMIT() {
+        return DEPOSITLIMIT;
+    }
+
+    public double getWITHDRAWLIMIT() {
+        return WITHDRAWLIMIT;
+    }
+
+    public double getCREDITLIMIT() {
+        return CREDITLIMIT;
+    }
+
+    public double getProcessingFee() {
+        return processingFee;
+    }
+
+    public ArrayList<Account> getBANKACCOUNTS() {
+        return BANKACCOUNTS;
+    }
+
+
     // Constructor with basic parameters
     public Bank(int ID, String name, String passcode) {
         this.ID = ID;
         this.name = name;
         this.passcode = passcode;
-        this.BANKACCOUNTS = new ArrayList<Account>();
+        this.BANKACCOUNTS = new ArrayList<>(); // Suggest ng IDE na <> ra daw, dili <Account>
     }
 
     // Constructor with all parameters
@@ -43,7 +77,7 @@ public class Bank {
     // Method to retrieve a specific account by account number
     public void getBankAccount(Bank bank, String accountNum) {
         for (Account account : bank.BANKACCOUNTS) {
-            if (account.getAccountNumber().equals(accountNum)) {
+            if (account.getACCOUNTNUMBER().equals(accountNum)) {
                 System.out.println(account.toString());
                 return;
             }
@@ -73,7 +107,7 @@ public class Bank {
 
     // Method to add a new account to the bank
     public void addNewAccount(Account account) {
-        if (!accountExists(this, account.getAccountNumber())) {
+        if (!accountExists(this, account.getACCOUNTNUMBER())) {
             BANKACCOUNTS.add(account);
         }
     }
@@ -81,7 +115,7 @@ public class Bank {
     // Static method to check if an account exists
     public static boolean accountExists(Bank bank, String accountNum) {
         for (Account account : bank.BANKACCOUNTS) {
-            if (account.getAccountNumber().equals(accountNum)) {
+            if (account.getACCOUNTNUMBER().equals(accountNum)) {
                 return true;
             }
         }

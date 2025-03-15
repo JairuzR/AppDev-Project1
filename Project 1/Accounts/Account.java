@@ -6,14 +6,40 @@ import java.util.ArrayList;
 public abstract class Account {
 
     private Bank bank;
-
     private String ACCOUNTNUMBER;
-
     private String OWNERFNAME, OWNERLNAME, OWNEREMAIL;
-
     private String pin;
-
     private ArrayList<Transaction> Transactions;
+
+    // Getters
+    public Bank getBank() {
+        return bank;
+    }
+
+    public String getACCOUNTNUMBER() {
+        return ACCOUNTNUMBER;
+    }
+
+    public String getOWNERFNAME() {
+        return OWNERFNAME;
+    }
+
+    public String getOWNERLNAME() {
+        return OWNERLNAME;
+    }
+
+    public String getOWNEREMAIL() {
+        return OWNEREMAIL;
+    }
+
+    public String getPin() {
+        return pin;
+    }
+
+    public ArrayList<Transaction> getTransactions() {
+        return Transactions;
+    }
+
 
     /**
      *
