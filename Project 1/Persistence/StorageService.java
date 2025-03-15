@@ -1,4 +1,4 @@
-package persistence;
+package Persistence;
 
 import Bank.Bank;
 import java.io.IOException;
