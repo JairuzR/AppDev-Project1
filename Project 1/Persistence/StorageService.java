@@ -1,29 +1,30 @@
-package Persistence;
+package persistence;
 
 import Bank.Bank;
 import java.io.IOException;
 import java.util.List;
 
 /**
- * A storage service interface to handle persistence operations.
- * This interface abstracts the JSON file operations so that
- * your core application can work with a generic storage service.
+ * An interface for persisting Bank data.
+ * It defines methods to save and load a list of Bank objects.
+ * Implementations of this interface can use any storage mechanism,
+ * such as JSON files, databases, etc.
  */
 public interface StorageService {
-    
+
     /**
      * Saves the list of Bank objects to persistent storage.
-     * 
-     * @param banks The list of banks to save.
-     * @throws IOException if an I/O error occurs during saving.
+     *
+     * @param banks the list of banks to save
+     * @throws IOException if an I/O error occurs during saving
      */
     void saveBanks(List<Bank> banks) throws IOException;
 
     /**
      * Loads the list of Bank objects from persistent storage.
-     * 
-     * @return The list of banks.
-     * @throws IOException if an I/O error occurs during loading.
+     *
+     * @return the list of banks loaded from storage
+     * @throws IOException if an I/O error occurs during loading
      */
     List<Bank> loadBanks() throws IOException;
 }
