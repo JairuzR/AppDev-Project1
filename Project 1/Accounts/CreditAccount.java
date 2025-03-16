@@ -68,7 +68,25 @@ public class CreditAccount extends Account implements Payment, Recompense {
         // Assume valid account type checks happen here.
         return true;
     }
-        
+    
+    // // ADVANCED REQUIREMENTS
+    // public void creditPaymentProcess(double payment) {
+    //     if (payment > 0) {
+    //         loan -= payment;
+    //         addNewTransaction(ACCOUNTNUMBER, Transaction.TransactionType.PAYMENT, "Loan payment of $" + payment);
+    //     } else {
+    //         System.out.println("Invalid amount.");
+    //     }
+    // }
+
+    // public void creditRecompenseProcess(double recompense) {
+    //     if (recompense > 0) {
+    //         loan += recompense;
+    //         addNewTransaction(ACCOUNTNUMBER, Transacton,TransactionType.RECOMPENSE, "Loan recompense of $" + recompense);
+    //     } else {
+    //         System.out.println("Invalid amount.");
+    //     }
+    // }
 
 
    @Override

@@ -57,7 +57,7 @@ public abstract class Account {
         this.OWNERLNAME = OWNERLNAME;
         this.OWNEREMAIL = OWNEREMAIL;
         this.pin = pin;
-        Transactions = new ArrayList<>();
+        this.Transactions = new ArrayList<>();
     }
 
     /**
@@ -69,9 +69,16 @@ public abstract class Account {
         return OWNERFNAME + " " + OWNERLNAME;
     }
 
-
     public void addNewTransaction(String accountNum, Transaction.Transactions type, String description) {
         Transactions.add(new Transaction(accountNum, type, description));
+    }
+
+    public String getTransactionInfo () {
+        String result = "";
+        for (Transaction i : Transactions) {
+            result += i.toString() + "\n";
+        }
+        return result;
     }
 
     public String toString() { return String.format("Account number: %s, Owner: %s", this.ACCOUNTNUMBER, getOwnerFullName()); }

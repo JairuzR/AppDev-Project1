@@ -34,12 +34,22 @@ public class Main
                 showMenu(2, 1);
                 setOption();
                 showMenu(getOption(), 1);
-                // TODO: Complete this portion
+                
+                if (getOption() == 1) {
+                    AccountLauncher.accountLogin();
+                }
             }
             // Bank Option
             else if (getOption() == 2)
             {
-                // TODO: Complete Bank option
+                showMenuHeader("Account Login Menu");
+                showMenu(3, 1);
+                setOption();
+                showMenu(getOption(), 1);
+
+                if (getOption() == 1) {
+                    BankLauncher.bankLogin();
+                }
             }
             // Create New Bank
             else if (getOption() == 3)

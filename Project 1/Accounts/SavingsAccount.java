@@ -16,7 +16,6 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
     private final ReentrantLock lock = new ReentrantLock();
     private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    
     private static class LockGuard implements AutoCloseable {
         private final ReentrantLock lock;
         public LockGuard(ReentrantLock lock) {
@@ -43,35 +42,39 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
      */
     public SavingsAccount(Bank bank, String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin, double balance) {
         super(bank, ACCOUNTNUMBER, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin);
-        if (balance < 0 || balance > bank.getDepositLimit()) {
-            throw new IllegalArgumentException("Initial balance must be non-negative and not exceed the bank's deposit limit of $" + bank.getDepositLimit());
+        if (balance < 0 || balance > bank.getDEPOSITLIMIT()) {
+            throw new IllegalArgumentException("Initial balance must be non-negative and not exceed the bank's deposit limit of $" + bank.getDEPOSITLIMIT());
         }
         this.balance = balance;
         logTransaction(Transaction.Transactions.Deposit, "Account created with initial balance: $" + balance);
     }
 
-    public String getACCOUNTNUMBER() {
-        return ACCOUNTNUMBER;
-    }
+    // public String getACCOUNTNUMBER() {
+    //     return ACCOUNTNUMBER;
+    // }
 
-    public String getOWNERFNAME() {
-        return OWNERFNAME;
-    }
+    // public String getOWNERFNAME() {
+    //     return OWNERFNAME;
+    // }
 
-    public String getOWNERLNAME() {
-        return OWNERLNAME;
-    }
+    // public String getOWNERLNAME() {
+    //     return OWNERLNAME;
+    // }
 
-    public String getOWNEREMAIL() {
-        return OWNEREMAIL;
-    }
+    // public String getOWNEREMAIL() {
+    //     return OWNEREMAIL;
+    // }
 
-    public String getpin() {
-        return pin;
-    }
+    // public String getpin() {
+    //     return pin;
+    // }
 
-    public ArrayList<Transaction> getTransactions() {
-        return transactions;
+    // public ArrayList<Transaction> getTransactions() {
+    //     return transactions;
+    // }
+
+    public String getBankName() {
+        return getBank().getName();
     }
 
     /**
@@ -82,8 +85,8 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
      */
     @Override
     public boolean cashDeposit(double amount) {
-        if (amount <= 0 || amount > getBank().getDepositLimit()) {
-            throw new IllegalArgumentException("Deposit must be > 0 and not exceed the bank's deposit limit of $" + getBank().getDepositLimit());
+        if (amount <= 0 || amount > getBank().getDEPOSITLIMIT()) {
+            throw new IllegalArgumentException("Deposit must be > 0 and not exceed the bank's deposit limit of $" + getBank().getDEPOSITLIMIT());
         }
         try (LockGuard guard = new LockGuard(lock)) {
             balance += amount;
@@ -101,8 +104,8 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
      */
     @Override
     public boolean withdrawal(double amount) {
-        if (amount <= 0 || amount > getBank().getWithdrawLimit()) {
-            throw new IllegalArgumentException("Withdrawal must be > 0 and not exceed the bank's withdrawal limit of $" + getBank().getWithdrawLimit());
+        if (amount <= 0 || amount > getBank().getWITHDRAWLIMIT()) {
+            throw new IllegalArgumentException("Withdrawal must be > 0 and not exceed the bank's withdrawal limit of $" + getBank().getWITHDRAWLIMIT());
         }
         try (LockGuard guard = new LockGuard(lock)) {
             if (amount > balance) {
@@ -129,8 +132,8 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
      */
     @Override
     public boolean transfer(Account recipient, double amount) throws IllegalAccountType {
-        if (amount <= 0 || amount > getBank().getWithdrawLimit()) {
-            throw new IllegalArgumentException("Transfer must be > 0 and not exceed the bank's withdrawal limit of $" + getBank().getWithdrawLimit());
+        if (amount <= 0 || amount > getBank().getWITHDRAWLIMIT()) {
+            throw new IllegalArgumentException("Transfer must be > 0 and not exceed the bank's withdrawal limit of $" + getBank().getWITHDRAWLIMIT());
         }
         if (!(recipient instanceof SavingsAccount)) {
             throw new IllegalAccountType("Transfers can only be made between savings accounts.");
@@ -162,8 +165,8 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
      */
     @Override
     public boolean transfer(Bank recipientBank, Account recipient, double amount) throws IllegalAccountType {
-        if (amount <= 0 || amount > getBank().getWithdrawLimit()) {
-            throw new IllegalArgumentException("Transfer must be > 0 and not exceed the bank's withdrawal limit of $" + getBank().getWithdrawLimit());
+        if (amount <= 0 || amount > getBank().getWITHDRAWLIMIT()) {
+            throw new IllegalArgumentException("Transfer must be > 0 and not exceed the bank's withdrawal limit of $" + getBank().getWITHDRAWLIMIT());
         }
         if (!(recipient instanceof SavingsAccount)) {
             throw new IllegalAccountType("Transfers can only be made between savings accounts.");
@@ -211,11 +214,11 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
 
     private void logTransaction(Transaction.Transactions type, String description) {
         String timestamp = LocalDateTime.now().format(TIMESTAMP_FORMATTER);
-        addNewTransaction(getAccountNumber(), type, description + " [" + timestamp + "]");
+        addNewTransaction(getACCOUNTNUMBER(), type, description + " [" + timestamp + "]");
     }
 
     @Override
     public String toString() {
-        return "SavingsAccount{AccountNumber='" + getAccountNumber() + "', Balance=$" + balance + "}";
+        return "SavingsAccount{AccountNumber='" + getACCOUNTNUMBER() + "', Balance=$" + balance + "}";
     }
 }

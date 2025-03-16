@@ -1,7 +1,7 @@
 package Bank;
 
-import java.util.ArrayList;
 import Accounts.*;
+import java.util.ArrayList;
 
 public class Bank {
     private int ID;
@@ -41,6 +41,15 @@ public class Bank {
 
     public ArrayList<Account> getBANKACCOUNTS() {
         return BANKACCOUNTS;
+    }
+
+    public Account getAccount(String accountNum) {
+        for (Account acnt : BANKACCOUNTS) {
+            if (acnt.getACCOUNTNUMBER().equals(accountNum)) {
+                return acnt;
+            }
+        }
+        return null;
     }
 
 
@@ -92,15 +101,34 @@ public class Bank {
     }
 
     // Method to create a new credit account
-    public CreditAccount createNewCreditAccount() {
-        String accountNumber = generateAccountNumber();
-        return new CreditAccount(accountNumber, 0.0, this.CREDITLIMIT);
+    public CreditAccount createNewCreditAccount(String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin) {
+        // String accountNumber = generateAccountNumber();
+        // return new CreditAccount(accountNumber, 0.0, this.CREDITLIMIT);
+        if (getAccount(ACCOUNTNUMBER) != null) {
+            System.out.println("Account already exists!");
+            return null;
+        }
+        CreditAccount account = new CreditAccount(this, ACCOUNTNUMBER, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin);
+        addNewAccount(account);
+        return account;
+
     }
 
-    // Method to create a new savings account
-    public SavingsAccount createNewSavingsAccount() {
-        String accountNumber = generateAccountNumber();
-        return new SavingsAccount(accountNumber, 0.0);
+    // // Method to create a new savings account
+    public SavingsAccount createNewSavingsAccount(String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin, double balance) {
+    //     String accountNumber = generateAccountNumber();
+    //     return new SavingsAccount(accountNumber, 0.0);
+        if (getAccount(ACCOUNTNUMBER) != null) {
+            System.out.println("Account already exists!");
+            return null;
+        }
+        if (balance < 0 || balance > DEPOSITLIMIT) {
+            System.out.println("Invalid balance.");
+            return null;
+        }
+        SavingsAccount account = new SavingsAccount(this, ACCOUNTNUMBER, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin, balance);
+        addNewAccount(account);
+        return account;
     }
 
     // Method to add a new account to the bank
@@ -157,12 +185,13 @@ public class Bank {
     }
 
     // toString method
+    @Override
     public String toString() {
-        return "Bank ID: " + this.ID + 
-               ", Name: " + this.name + 
-               ", Accounts: " + this.BANKACCOUNTS.size() +
-               ", Deposit Limit: $" + this.DEPOSITLIMIT +
-               ", Withdrawal Limit: $" + this.WITHDRAWLIMIT +
+        return "Bank ID: " + this.ID + "/n" +
+               ", Name: " + this.name + "/n" +
+               ", Accounts: " + this.BANKACCOUNTS.size() + "/n" +
+               ", Deposit Limit: $" + this.DEPOSITLIMIT + "/n" +
+               ", Withdrawal Limit: $" + this.WITHDRAWLIMIT + "/n" +
                ", Credit Limit: $" + this.CREDITLIMIT;
     }
 }
