@@ -50,6 +50,30 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
         logTransaction(Transaction.Transactions.Deposit, "Account created with initial balance: $" + balance);
     }
 
+    public String getACCOUNTNUMBER() {
+        return ACCOUNTNUMBER;
+    }
+
+    public String getOWNERFNAME() {
+        return OWNERFNAME;
+    }
+
+    public String getOWNERLNAME() {
+        return OWNERLNAME;
+    }
+
+    public String getOWNEREMAIL() {
+        return OWNEREMAIL;
+    }
+
+    public String getpin() {
+        return pin;
+    }
+
+    public ArrayList<Transaction> getTransactions() {
+        return transactions;
+    }
+
     /**
      * Deposits cash into the account.
      * @param amount Amount to deposit.
