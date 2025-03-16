@@ -184,7 +184,7 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
             SavingsAccount recipientAccount = (SavingsAccount) recipient;
             recipientAccount.adjustAccountBalance(amount);
             logTransaction(Transaction.Transactions.FundTransfer, "Transferred $" + amount + " to Account: " 
-                + recipient.getACCOUNTNUMBER() + " in Bank: " + recipientBank.getBankName() 
+                + recipient.getACCOUNTNUMBER() + " in Bank: " + recipientBank.getName() 
                 + " (Processing Fee: $" + processingFee + ")");
             System.out.println("Cross-bank transfer successful! New Balance: $" + balance);
             return true;
