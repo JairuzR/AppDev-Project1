@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public abstract class Account {
 
-    private Bank bank;
-    private String ACCOUNTNUMBER;
-    private String OWNERFNAME, OWNERLNAME, OWNEREMAIL;
+    private final Bank bank;
+    private final String accountnumber;
+    private final String ownerfname, ownerlname, owneremail;
     private String pin;
     private ArrayList<Transaction> Transactions;
 
@@ -16,20 +16,20 @@ public abstract class Account {
         return bank;
     }
 
-    public String getACCOUNTNUMBER() {
-        return ACCOUNTNUMBER;
+    public String getAccountNumber() {
+        return accountnumber;
     }
 
-    public String getOWNERFNAME() {
-        return OWNERFNAME;
+    public String getOwnerFName() {
+        return ownerfname;
     }
 
-    public String getOWNERLNAME() {
-        return OWNERLNAME;
+    public String getOwnerLName() {
+        return ownerlname;
     }
 
-    public String getOWNEREMAIL() {
-        return OWNEREMAIL;
+    public String getOwnerEmail() {
+        return owneremail;
     }
 
     public String getPin() {
@@ -44,18 +44,18 @@ public abstract class Account {
     /**
      *
      * @param bank
-     * @param ACCOUNTNUMBER
-     * @param OWNERFNAME
-     * @param OWNERLNAME
-     * @param OWNEREMAIL
+     * @param AccountNumber
+     * @param OwnerFName
+     * @param OwnerLName
+     * @param OwnerEmail
      * @param pin
      */
-    public Account(Bank bank, String ACCOUNTNUMBER,String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin) {
+    public Account(Bank bank, String accountnumber,String ownerfname, String ownerlname, String owneremail, String pin) {
         this.bank = bank;
-        this.ACCOUNTNUMBER = ACCOUNTNUMBER;
-        this.OWNERFNAME = OWNERFNAME;
-        this.OWNERLNAME = OWNERLNAME;
-        this.OWNEREMAIL = OWNEREMAIL;
+        this.accountnumber = accountnumber;
+        this.ownerfname = ownerfname;
+        this.ownerlname = ownerlname;
+        this.owneremail = owneremail;
         this.pin = pin;
         this.Transactions = new ArrayList<>();
     }
@@ -66,7 +66,7 @@ public abstract class Account {
      * @return Full name in "First Last" format.
      */
     public String getOwnerFullName() {
-        return OWNERFNAME + " " + OWNERLNAME;
+        return ownerfname + " " + ownerlname;
     }
 
     public void addNewTransaction(String accountNum, Transaction.Transactions type, String description) {
@@ -81,6 +81,6 @@ public abstract class Account {
         return result;
     }
 
-    public String toString() { return String.format("Account number: %s, Owner: %s", this.ACCOUNTNUMBER, getOwnerFullName()); }
+    public String toString() { return String.format("Account number: %s, Owner: %s", this.accountnumber, getOwnerFullName()); }
 
 }

@@ -12,14 +12,14 @@ public class CreditAccount extends Account implements Payment, Recompense {
      * Constructs a credit amount.
      *
      * @param bank          The bank.
-     * @param ACCOUNTNUMBER The account number.
-     * @param OWNERFNAME    The owners first name.
-     * @param OWNERLNAME    The owners last name.
-     * @param OWNEREMAIL    The owners email.
+     * @param AccountNumber The account number.
+     * @param OwnerFName    The owners first name.
+     * @param OwnerLName    The owners last name.
+     * @param OwnerEmail    The owners email.
      * @param pin           The owners pin.
      */
-    public CreditAccount(Bank bank, String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin) {
-        super(bank, ACCOUNTNUMBER, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin);
+    public CreditAccount(Bank bank, String accountnumber, String ownerfname, String ownerlname, String owneremail, String pin) {
+        super(bank, accountnumber, ownerfname, ownerlname, owneremail, pin);
         this.loan = 0.0;
     }
     
