@@ -61,7 +61,7 @@ public abstract class Account {
     }
 
     /**
-     * Gets the full name of the account owner.
+     * Gets the full name of the account owner...
      *
      * @return Full name in "First Last" format.
      */
