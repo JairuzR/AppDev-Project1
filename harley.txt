@@ -1,0 +1,312 @@
+added override method in CreditAccount.java
+ @Override
+    public boolean recompense(double amount) {
+        if (amount > 0 && canCredit(amount)) {
+            adjustLoanAmount(amount);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean pay(Account account, double amount) throws IllegalAccountType {
+        if (amount <= 0) return false;
+        // Assume valid account type checks happen here.
+        return true;
+    }
+
+   added override method in transaction.java 
+   @Override
+    public String toString() {
+        return "Transaction: " + transactionType + " | Account: " + accountNumber + " | " + description;
+    }
+
+
+
+sample codes!!!!
+
+Account.java
+
+package Accounts;
+
+import Bank.Bank;
+import java.util.ArrayList;
+
+/**
+ * Abstract class representing a bank account.
+ */
+public abstract class Account {
+
+    private Bank bank;
+    private String ACCOUNTNUMBER;
+    private String OWNERFNAME, OWNERLNAME, OWNEREMAIL;
+    private String pin;
+    private ArrayList<Transaction> transactions;
+
+    /**
+     * Constructs an Account.
+     * 
+     * @param bank         The bank to which the account belongs.
+     * @param OWNERFNAME   First name of the account owner.
+     * @param OWNERLNAME   Last name of the account owner.
+     * @param OWNEREMAIL   Email of the account owner.
+     * @param pin          PIN code for security authentication.
+     */
+    public Account(Bank bank, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin) {
+        this.bank = bank;
+        this.OWNERFNAME = OWNERFNAME;
+        this.OWNERLNAME = OWNERLNAME;
+        this.OWNEREMAIL = OWNEREMAIL;
+        this.pin = pin;
+        this.transactions = new ArrayList<>();
+    }
+
+    /**
+     * Gets the full name of the account owner.
+     *
+     * @return Full name in "First Last" format.
+     */
+    public String getOwnerFullName() {
+        return OWNERFNAME + " " + OWNERLNAME;
+    }
+
+    /**
+     * Adds a new transaction record.
+     *
+     * @param accountNum   Account number involved in the transaction.
+     * @param type         Type of transaction performed.
+     * @param description  Description of the transaction.
+     */
+    public void addNewTransaction(String accountNum, Transaction.Transactions type, String description) {
+        transactions.add(new Transaction(accountNum, type, description));
+    }
+
+    /**
+     * Retrieves the transaction history.
+     *
+     * @return String representation of all transactions.
+     */
+    public String getTransactions() {
+        StringBuilder transactionHistory = new StringBuilder("Transaction History:\n");
+        for (Transaction t : transactions) {
+            transactionHistory.append(t.toString()).append("\n");
+        }
+        return transactionHistory.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Account Owner: " + getOwnerFullName() + ", Email: " + OWNEREMAIL;
+    }
+}
+
+
+
+SavingsAccount.java
+
+
+
+package Accounts;
+
+import Bank.Bank;
+
+/**
+ * Represents a Savings Account with deposit, withdrawal, and fund transfer capabilities.
+ */
+public class SavingsAccount extends Account implements Withdrawal, Deposit, FundTransfer {
+
+    private double balance;
+
+    /**
+     * Constructs a Savings Account.
+     * 
+     * @param bank         The bank managing the account.
+     * @param OWNERFNAME   First name of the account owner.
+     * @param OWNERLNAME   Last name of the account owner.
+     * @param OWNEREMAIL   Email of the account owner.
+     * @param pin          Security PIN.
+     * @param balance      Initial balance.
+     */
+    public SavingsAccount(Bank bank, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin, double balance) {
+        super(bank, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin);
+        this.balance = balance;
+    }
+
+    /**
+     * Retrieves the account balance statement.
+     *
+     * @return A formatted string displaying the current balance.
+     */
+    public String getAccountBalanceStatement() {
+        return "Current Balance: $" + String.format("%.2f", balance);
+    }
+
+    /**
+     * Checks if there is enough balance for a transaction.
+     *
+     * @param amount The amount to check.
+     * @return True if sufficient funds exist, false otherwise.
+     */
+    private boolean hasEnoughBalance(double amount) {
+        return balance >= amount;
+    }
+
+    /**
+     * Handles an insufficient balance scenario.
+     */
+    private void insufficientBalance() {
+        throw new IllegalStateException("Insufficient balance for this transaction.");
+    }
+
+    /**
+     * Adjusts the account balance.
+     *
+     * @param amount The amount to be added or deducted.
+     */
+    private void adjustAccountBalance(double amount) {
+        if (amount < 0 && !hasEnoughBalance(-amount)) {
+            insufficientBalance();
+        }
+        balance += amount;
+    }
+
+    @Override
+    public boolean withdraw(double amount) {
+        if (amount > 0 && hasEnoughBalance(amount)) {
+            adjustAccountBalance(-amount);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean cashDeposit(double amount) {
+        if (amount > 0) {
+            adjustAccountBalance(amount);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean transfer(Account account, double amount) throws IllegalAccountType {
+        if (amount > 0 && hasEnoughBalance(amount)) {
+            adjustAccountBalance(-amount);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", Balance: $" + String.format("%.2f", balance);
+    }
+}
+
+Deposit.java
+
+
+package Accounts;
+
+/**
+ * Interface for deposit transactions.
+ */
+public interface Deposit {
+
+    /**
+     * Deposits a specified amount of money into the account.
+     *
+     * @param amount The amount to be deposited. Must be positive.
+     * @return True if the deposit was successful, false otherwise.
+     */
+    boolean cashDeposit(double amount);
+}
+
+
+FundTransfer.java
+
+package Accounts;
+
+import Bank.Bank;
+
+/**
+ * Interface for fund transfer transactions.
+ */
+public interface FundTransfer {
+
+    /**
+     * Transfers money between different banks, applying a processing fee.
+     * <br><br>
+     * Transfer cannot proceed if:
+     * <ul>
+     *     <li>Insufficient balance from the source account.</li>
+     *     <li>Account types are incompatible for fund transfer.</li>
+     * </ul>
+     *
+     * @param bank    The recipient's bank.
+     * @param account The recipient's account.
+     * @param amount  The amount to be transferred.
+     * @return True if the transfer was successful, false otherwise.
+     * @throws IllegalAccountType If transferring between incompatible account types.
+     */
+    boolean transfer(Bank bank, Account account, double amount) throws IllegalAccountType;
+
+    /**
+     * Transfers money between accounts in the same bank.
+     * <br><br>
+     * Transfer cannot proceed if:
+     * <ul>
+     *     <li>Insufficient balance from the source account.</li>
+     *     <li>Recipient account does not exist.</li>
+     *     <li>Recipient account is from another bank.</li>
+     * </ul>
+     *
+     * @param account The recipient's account.
+     * @param amount  The amount to be transferred.
+     * @return True if the transfer was successful, false otherwise.
+     * @throws IllegalAccountType If transferring between incompatible account types.
+     */
+    boolean transfer(Account account, double amount) throws IllegalAccountType;
+}
+
+
+
+IllegalAccountType.java
+
+
+package Accounts;
+
+/**
+ * Exception thrown when an account operation involves incompatible account types.
+ */
+public class IllegalAccountType extends Exception {
+
+    /**
+     * Constructs an IllegalAccountType exception.
+     *
+     * @param errorMessage A description of the error.
+     */
+    public IllegalAccountType(String errorMessage) {
+        super(errorMessage);
+    }
+}
+
+
+withdrawal.java 
+
+
+package Accounts;
+
+/**
+ * Interface for withdrawal transactions.
+ */
+public interface Withdrawal {
+
+    /**
+     * Withdraws a specified amount from the account.
+     *
+     * @param amount The amount to be withdrawn. Must be positive.
+     * @return True if the withdrawal was successful, false otherwise.
+     */
+    boolean withdraw(double amount);
+}
