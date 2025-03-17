@@ -139,7 +139,7 @@ public class BankLauncher {
     public Account findAccount(String accountNum) {
         for (Bank bank : BANKS) {
             for (Account account : bank.getAccount_of_Bank()) {
-                if (account.getACCOUNTNUMBER().equals(accountNum)) {
+                if (account.getAccountNumber().equals(accountNum)) {
                     return account;
                 }
             }
