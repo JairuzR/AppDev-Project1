@@ -53,11 +53,11 @@ public class Bank {
         return depositlimit;
         }
 
-    public double getWITHDRAWLIMIT() {
+    public double getWithdrawLimit() {
         return withdrawlimit;
         }
 
-    public double getCREDITLIMIT() {
+    public double getCreditLimit() {
         return creditlimit;
         }
 
