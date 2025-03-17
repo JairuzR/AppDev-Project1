@@ -32,18 +32,18 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
      * Constructs a SavingsAccount.
      * 
      * @param bank         The associated bank.
-     * @param ACCOUNTNUMBER The unique account number.
-     * @param OWNERFNAME   The owner's first name.
-     * @param OWNERLNAME   The owner's last name.
-     * @param OWNEREMAIL   The owner's email.
+     * @param accountnumber The unique account number.
+     * @param ownerfname   The owner's first name.
+     * @param ownerlname   The owner's last name.
+     * @param owneremail   The owner's email.
      * @param pin          The account pin.
      * @param balance      The initial balance.
      * @throws IllegalArgumentException if balance is negative or exceeds the bank's deposit limit.
      */
     public SavingsAccount(Bank bank, String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin, double balance) {
         super(bank, ACCOUNTNUMBER, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin);
-        if (balance < 0 || balance > bank.getDEPOSITLIMIT()) {
-            throw new IllegalArgumentException("Initial balance must be non-negative and not exceed the bank's deposit limit of $" + bank.getDEPOSITLIMIT());
+        if (balance < 0 || balance > bank.getDepositLimit()) {
+            throw new IllegalArgumentException("Initial balance must be non-negative and not exceed the bank's deposit limit of $" + bank.getDepositLimit());
         }
         this.balance = balance;
         logTransaction(Transaction.Transactions.Deposit, "Account created with initial balance: $" + balance);
@@ -85,8 +85,8 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
      */
     @Override
     public boolean cashDeposit(double amount) {
-        if (amount <= 0 || amount > getBank().getDEPOSITLIMIT()) {
-            throw new IllegalArgumentException("Deposit must be > 0 and not exceed the bank's deposit limit of $" + getBank().getDEPOSITLIMIT());
+        if (amount <= 0 || amount > getBank().getDepositLimit()) {
+            throw new IllegalArgumentException("Deposit must be > 0 and not exceed the bank's deposit limit of $" + getBank().getDepositLimit());
         }
         try (LockGuard guard = new LockGuard(lock)) {
             balance += amount;
@@ -104,8 +104,8 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
      */
     @Override
     public boolean withdrawal(double amount) {
-        if (amount <= 0 || amount > getBank().getWITHDRAWLIMIT()) {
-            throw new IllegalArgumentException("Withdrawal must be > 0 and not exceed the bank's withdrawal limit of $" + getBank().getWITHDRAWLIMIT());
+        if (amount <= 0 || amount > getBank().getWithdrawLimit()) {
+            throw new IllegalArgumentException("Withdrawal must be > 0 and not exceed the bank's withdrawal limit of $" + getBank().getWithdrawLimit());
         }
         try (LockGuard guard = new LockGuard(lock)) {
             if (amount > balance) {
@@ -132,14 +132,14 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
      */
     @Override
     public boolean transfer(Account recipient, double amount) throws IllegalAccountType {
-        if (amount <= 0 || amount > getBank().getWITHDRAWLIMIT()) {
-            throw new IllegalArgumentException("Transfer must be > 0 and not exceed the bank's withdrawal limit of $" + getBank().getWITHDRAWLIMIT());
+        if (amount <= 0 || amount > getBank().getWithdrawLimit()) {
+            throw new IllegalArgumentException("Transfer must be > 0 and not exceed the bank's withdrawal limit of $" + getBank().getWithdrawLimit());
         }
         if (!(recipient instanceof SavingsAccount)) {
             throw new IllegalAccountType("Transfers can only be made between savings accounts.");
         }
         SavingsAccount recipientAccount = (SavingsAccount) recipient;
-        ReentrantLock firstLock = (this.getACCOUNTNUMBER().compareTo(recipient.getACCOUNTNUMBER()) < 0) ? this.lock : recipientAccount.lock;
+        ReentrantLock firstLock = (this.getAccountNumber().compareTo(recipient.getAccountNumber()) < 0) ? this.lock : recipientAccount.lock;
         ReentrantLock secondLock = (firstLock == this.lock) ? recipientAccount.lock : this.lock;
         try (LockGuard guard1 = new LockGuard(firstLock); LockGuard guard2 = new LockGuard(secondLock)) {
             if (amount > balance) {
@@ -148,7 +148,7 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
             }
             balance -= amount;
             recipientAccount.adjustAccountBalance(amount);
-            logTransaction(Transaction.Transactions.FundTransfer, "Transferred $" + amount + " to Account: " + recipient.getACCOUNTNUMBER());
+            logTransaction(Transaction.Transactions.FundTransfer, "Transferred $" + amount + " to Account: " + recipient.getAccountNumber());
             System.out.println("Transfer successful! New Balance: $" + balance);
             return true;
         }
@@ -165,8 +165,8 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
      */
     @Override
     public boolean transfer(Bank recipientBank, Account recipient, double amount) throws IllegalAccountType {
-        if (amount <= 0 || amount > getBank().getWITHDRAWLIMIT()) {
-            throw new IllegalArgumentException("Transfer must be > 0 and not exceed the bank's withdrawal limit of $" + getBank().getWITHDRAWLIMIT());
+        if (amount <= 0 || amount > getBank().getWithdrawLimit()) {
+            throw new IllegalArgumentException("Transfer must be > 0 and not exceed the bank's withdrawal limit of $" + getBank().getWithdrawLimit());
         }
         if (!(recipient instanceof SavingsAccount)) {
             throw new IllegalAccountType("Transfers can only be made between savings accounts.");
@@ -184,7 +184,7 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
             SavingsAccount recipientAccount = (SavingsAccount) recipient;
             recipientAccount.adjustAccountBalance(amount);
             logTransaction(Transaction.Transactions.FundTransfer, "Transferred $" + amount + " to Account: " 
-                + recipient.getACCOUNTNUMBER() + " in Bank: " + recipientBank.getName() 
+                + recipient.getAccountNumber() + " in Bank: " + recipientBank.getName() 
                 + " (Processing Fee: $" + processingFee + ")");
             System.out.println("Cross-bank transfer successful! New Balance: $" + balance);
             return true;
@@ -192,7 +192,7 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
     }
 
     public String getAccountBalanceStatement() {
-        return "Account: " + getACCOUNTNUMBER() + " | Balance: $" + balance;
+        return "Account: " + getAccountNumber() + " | Balance: $" + balance;
     }
 
     private boolean hasEnoughBalance(double amount) {
@@ -214,11 +214,11 @@ public class SavingsAccount extends Account implements Deposit, Withdrawal, Fund
 
     private void logTransaction(Transaction.Transactions type, String description) {
         String timestamp = LocalDateTime.now().format(TIMESTAMP_FORMATTER);
-        addNewTransaction(getACCOUNTNUMBER(), type, description + " [" + timestamp + "]");
+        addNewTransaction(getAccountNumber(), type, description + " [" + timestamp + "]");
     }
 
     @Override
     public String toString() {
-        return "SavingsAccount{AccountNumber='" + getACCOUNTNUMBER() + "', Balance=$" + balance + "}";
+        return "SavingsAccount{AccountNumber='" + getAccountNumber() + "', Balance=$" + balance + "}";
     }
 }
