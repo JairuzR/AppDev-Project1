@@ -1,7 +1,9 @@
 package Bank;
 
-import Accounts.*;
 import java.util.ArrayList;
+import Accounts.Account;
+import Accounts.CreditAccount;
+import Accounts.SavingsAccount;
 
 public class Bank {
     private int ID;
@@ -10,55 +12,12 @@ public class Bank {
     private double processingFee;
     private ArrayList<Account> BANKACCOUNTS;
 
-    // Getters    
-    public int getID() {
-        return ID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPasscode() {
-        return passcode;
-    }
-
-    public double getDEPOSITLIMIT() {
-        return DEPOSITLIMIT;
-    }
-
-    public double getWITHDRAWLIMIT() {
-        return WITHDRAWLIMIT;
-    }
-
-    public double getCREDITLIMIT() {
-        return CREDITLIMIT;
-    }
-
-    public double getProcessingFee() {
-        return processingFee;
-    }
-
-    public ArrayList<Account> getBANKACCOUNTS() {
-        return BANKACCOUNTS;
-    }
-
-    public Account getAccount(String accountNum) {
-        for (Account acnt : BANKACCOUNTS) {
-            if (acnt.getACCOUNTNUMBER().equals(accountNum)) {
-                return acnt;
-            }
-        }
-        return null;
-    }
-
-
     // Constructor with basic parameters
     public Bank(int ID, String name, String passcode) {
         this.ID = ID;
         this.name = name;
         this.passcode = passcode;
-        this.BANKACCOUNTS = new ArrayList<>(); // Suggest ng IDE na <> ra daw, dili <Account>
+        this.BANKACCOUNTS = new ArrayList<Account>();
     }
 
     // Constructor with all parameters
@@ -72,6 +31,40 @@ public class Bank {
         this.processingFee = processingFee;
         this.BANKACCOUNTS = new ArrayList<>();
     }
+
+    //Getters
+    public int getID() {
+        return ID;
+        }
+
+    public String getName() {
+        return name;
+        }    
+        
+    public String getPasscode() {
+        return passcode;
+        }
+
+    public double getDEPOSITLIMIT() {
+        return DEPOSITLIMIT;
+        }
+
+    public double getWITHDRAWLIMIT() {
+        return WITHDRAWLIMIT;
+        }
+
+    public double getCREDITLIMIT() {
+        return CREDITLIMIT;
+        }
+
+    public double getProcessingFee() {
+        return processingFee;
+        }
+
+    public ArrayList<Account> getAccount_of_Bank() {
+        return BANKACCOUNTS;
+        }
+    
 
     // Method to display accounts of a specific type
     public void showAccounts(Class<? extends Account> accountType) {
@@ -90,45 +83,43 @@ public class Bank {
                 return;
             }
         }
+        System.out.println("Account with number " + accountNum + " not found.");
     }
-
     // Method to create a new general account
-    public ArrayList<String> createNewAccount() {
-        ArrayList<String> accountDetails = new ArrayList<>();
-        String accountNumber = generateAccountNumber();
-        accountDetails.add(accountNumber);
-        return accountDetails;
+    public Account createNewAccount(String accountType, String accountNumber, String ownerFName, String ownerLName, String ownerEmail, String pin, double initialBalance) {
+        // Check if the account number already exists
+        if (accountExists(this, accountNumber)) {
+            throw new IllegalArgumentException("Account number " + accountNumber + " already exists.");
+        }
+    
+        switch (accountType.toLowerCase()) {
+            case "savings":
+                return new SavingsAccount(this, accountNumber, ownerFName, ownerLName, ownerEmail, pin, initialBalance);
+            case "credit":
+                return new CreditAccount(this, accountNumber, ownerFName, ownerLName, ownerEmail, pin);
+            default:
+                throw new IllegalArgumentException("Invalid account type: " + accountType);
+        }
     }
 
     // Method to create a new credit account
-    public CreditAccount createNewCreditAccount(String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin) {
-        // String accountNumber = generateAccountNumber();
-        // return new CreditAccount(accountNumber, 0.0, this.CREDITLIMIT);
-        if (getAccount(ACCOUNTNUMBER) != null) {
-            System.out.println("Account already exists!");
-            return null;
+    public CreditAccount createNewCreditAccount(String accountNumber, String ownerFName, String ownerLName, String ownerEmail, String pin) {
+        // Check if the account number already exists
+        if (accountExists(this, accountNumber)) {
+            throw new IllegalArgumentException("Account number " + accountNumber + " already exists.");
         }
-        CreditAccount account = new CreditAccount(this, ACCOUNTNUMBER, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin);
-        addNewAccount(account);
-        return account;
-
+        // Create and return a new CreditAccount
+        return new CreditAccount(this, accountNumber, ownerFName, ownerLName, ownerEmail, pin);
     }
 
-    // // Method to create a new savings account
-    public SavingsAccount createNewSavingsAccount(String ACCOUNTNUMBER, String OWNERFNAME, String OWNERLNAME, String OWNEREMAIL, String pin, double balance) {
-    //     String accountNumber = generateAccountNumber();
-    //     return new SavingsAccount(accountNumber, 0.0);
-        if (getAccount(ACCOUNTNUMBER) != null) {
-            System.out.println("Account already exists!");
-            return null;
+    // Method to create a new savings account
+    public SavingsAccount createNewSavingsAccount(String accountNumber, String ownerFName, String ownerLName, String ownerEmail, String pin, double initialBalance) {
+        // Check if the account number already exists
+        if (accountExists(this, accountNumber)) {
+            throw new IllegalArgumentException("Account number " + accountNumber + " already exists.");
         }
-        if (balance < 0 || balance > DEPOSITLIMIT) {
-            System.out.println("Invalid balance.");
-            return null;
-        }
-        SavingsAccount account = new SavingsAccount(this, ACCOUNTNUMBER, OWNERFNAME, OWNERLNAME, OWNEREMAIL, pin, balance);
-        addNewAccount(account);
-        return account;
+        // Create and return a new SavingsAccount
+        return new SavingsAccount(this, accountNumber, ownerFName, ownerLName, ownerEmail, pin, initialBalance);
     }
 
     // Method to add a new account to the bank
@@ -148,50 +139,13 @@ public class Bank {
         return false;
     }
 
-    
-    // Method to get bank info as a string (format: ID, String, String)
-    public String getBankInfo() {
-        return ID + ", " + name + ", " + passcode;
-    }
-    
-    // Method to show accounts of a bank
-    public void showAccounts() {
-        for (Account account : BANKACCOUNTS) {
-            System.out.println(account.toString());
-        }
-    }
-    
-    // Method to create a new account as a list of fields
-    public ArrayList<String> createNewAccount(String[] fields) {
-        ArrayList<String> accountDetails = new ArrayList<>();
-        // Implementation that uses the fields array for account creation
-        String accountNumber = generateAccountNumber();
-        accountDetails.add(accountNumber);
-        // Add other details from fields
-        for (String field : fields) {
-            accountDetails.add(field);
-        }
-        return accountDetails;
-    }
-    
-    // Method to check if an account exists in this bank
-    public boolean accountExists(String accountNum) {
-        return accountExists(this, accountNum);
-    }
-    
-    // Helper method to generate account numbers
-    private String generateAccountNumber() {
-        return String.valueOf(this.ID) + System.currentTimeMillis() % 10000;
-    }
-
     // toString method
-    @Override
     public String toString() {
-        return "Bank ID: " + this.ID + "/n" +
-               ", Name: " + this.name + "/n" +
-               ", Accounts: " + this.BANKACCOUNTS.size() + "/n" +
-               ", Deposit Limit: $" + this.DEPOSITLIMIT + "/n" +
-               ", Withdrawal Limit: $" + this.WITHDRAWLIMIT + "/n" +
+        return "Bank ID: " + this.ID + 
+               ", Name: " + this.name + 
+               ", Accounts: " + this.BANKACCOUNTS.size() +
+               ", Deposit Limit: $" + this.DEPOSITLIMIT +
+               ", Withdrawal Limit: $" + this.WITHDRAWLIMIT +
                ", Credit Limit: $" + this.CREDITLIMIT;
     }
 }
