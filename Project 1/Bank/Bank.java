@@ -8,7 +8,7 @@ import Accounts.SavingsAccount;
 public class Bank {
     private int ID;
     private String name, passcode;
-    private double DEPOSITLIMIT, WITHDRAWLIMIT, CREDITLIMIT;
+    private final double depositlimit, withdrawlimit, creditlimit;
     private double processingFee;
     private ArrayList<Account> BANKACCOUNTS;
 
@@ -18,16 +18,20 @@ public class Bank {
         this.name = name;
         this.passcode = passcode;
         this.BANKACCOUNTS = new ArrayList<Account>();
+        this.depositlimit = 0;
+        this.withdrawlimit = 0;
+        this.creditlimit = 0;
+
     }
 
     // Constructor with all parameters
-    public Bank(int ID, String name, String passcode, double DEPOSITLIMIT, double WITHDRAWLIMIT, double CREDITLIMIT, double processingFee) {
+    public Bank(int ID, String name, String passcode, double depositlimit, double withdrawlimit, double creditlimit, double processingFee) {
         this.ID = ID;
         this.name = name;
         this.passcode = passcode;
-        this.DEPOSITLIMIT = DEPOSITLIMIT;
-        this.WITHDRAWLIMIT = WITHDRAWLIMIT;
-        this.CREDITLIMIT = CREDITLIMIT;
+        this.depositlimit = depositlimit;
+        this.withdrawlimit = withdrawlimit;
+        this.creditlimit = creditlimit;
         this.processingFee = processingFee;
         this.BANKACCOUNTS = new ArrayList<>();
     }
@@ -45,16 +49,16 @@ public class Bank {
         return passcode;
         }
 
-    public double getDEPOSITLIMIT() {
-        return DEPOSITLIMIT;
+    public double getDepositLimit() {
+        return depositlimit;
         }
 
-    public double getWITHDRAWLIMIT() {
-        return WITHDRAWLIMIT;
+    public double getWithdrawLimit() {
+        return withdrawlimit;
         }
 
-    public double getCREDITLIMIT() {
-        return CREDITLIMIT;
+    public double getCreditLimit() {
+        return creditlimit;
         }
 
     public double getProcessingFee() {
@@ -78,7 +82,7 @@ public class Bank {
     // Method to retrieve a specific account by account number
     public void getBankAccount(Bank bank, String accountNum) {
         for (Account account : bank.BANKACCOUNTS) {
-            if (account.getACCOUNTNUMBER().equals(accountNum)) {
+            if (account.getAccountNumber().equals(accountNum)) {
                 System.out.println(account.toString());
                 return;
             }
@@ -124,7 +128,7 @@ public class Bank {
 
     // Method to add a new account to the bank
     public void addNewAccount(Account account) {
-        if (!accountExists(this, account.getACCOUNTNUMBER())) {
+        if (!accountExists(this, account.getAccountNumber())) {
             BANKACCOUNTS.add(account);
         }
     }
@@ -132,7 +136,7 @@ public class Bank {
     // Static method to check if an account exists
     public static boolean accountExists(Bank bank, String accountNum) {
         for (Account account : bank.BANKACCOUNTS) {
-            if (account.getACCOUNTNUMBER().equals(accountNum)) {
+            if (account.getAccountNumber().equals(accountNum)) {
                 return true;
             }
         }
@@ -144,8 +148,8 @@ public class Bank {
         return "Bank ID: " + this.ID + 
                ", Name: " + this.name + 
                ", Accounts: " + this.BANKACCOUNTS.size() +
-               ", Deposit Limit: $" + this.DEPOSITLIMIT +
-               ", Withdrawal Limit: $" + this.WITHDRAWLIMIT +
-               ", Credit Limit: $" + this.CREDITLIMIT;
+               ", Deposit Limit: $" + this.depositlimit +
+               ", Withdrawal Limit: $" + this.withdrawlimit +
+               ", Credit Limit: $" + this.creditlimit;
     }
 }
