@@ -44,7 +44,7 @@ public class BankLauncher {
      * Handles the bank login process
      * @return void
      */
-    publicb static void bankLogin() {
+    public static void bankLogin() {
         // Implementation would prompt for bank credentials
         System.out.println("Bank login process initiated.");
     }
