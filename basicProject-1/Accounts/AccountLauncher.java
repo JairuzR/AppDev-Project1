@@ -16,10 +16,15 @@ public class AccountLauncher {
         destroyLogSession();
         associatedBank = null;
 
+        int attempts = 3;
         while (associatedBank == null) {
             associatedBank = selectBank();
-            if (associatedBank == null) {
-                System.out.println("Invalid bank selection. Please try again.");
+            if (associatedBank == null && attempts != 0) {
+                System.out.println("Invalid bank selection. Please try again. Attempts: " + attempts);
+                attempts--;
+            } else {
+                System.out.println("Too many attempts! Exiting Account Login...");
+                return;
             }
         }
 
