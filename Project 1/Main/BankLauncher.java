@@ -3,17 +3,17 @@ package Main;
 import java.util.Comparator;
 import java.util.ArrayList;
 import Bank.Bank;
-import Accounts.Account;
+import Accounts.*;
 
 public class BankLauncher {
-    private static final ArrayList<Bank> BANKS = new ArrayList<>();
+    public static final ArrayList<Bank> banks = new ArrayList<>(); //originally private pero akong gi public para ma access sa uban class
     private static Bank loggedBank = null; // Initially no bank is logged in
     
     /**
      * Checks if a bank is currently logged in
      * @return boolean indicating login status
      */
-    public boolean isLogged() {
+    public static boolean isLogged() {
         return loggedBank != null;
     }
     
@@ -21,30 +21,93 @@ public class BankLauncher {
      * Initializes the bank system
      * @return void
      */
-    public void bankInit() {
+    public static void bankInit() {
         // Implementation to initialize the bank system
-        System.out.println("Bank system initialized.");
+
+        while(isLogged()){
+            Main.showMenuHeader("Bank Menu");
+            Main.showMenu(31);
+            Main.setOption();
+
+            if (Main.getOption() == 1) {
+                showAccounts();
+            } else if (Main.getOption() == 2) {
+                newAccounts();
+            } else if (Main.getOption() == 3) {
+                logout();
+            } else {
+                System.out.println("Invalid Option. Please try again.");
+            }
+        }
     }
+
+    private static void showAccounts() {
+        if(isLogged()){
+            Main.showMenu(32);
+            Main.setOption();
+            switch(Main.getOption()){
+                case 1:
+                    loggedBank.showAccounts(CreditAccount.class);
+                    break;
+
+                case 2:
+                    //savings account
+                    loggedBank.showAccounts(SavingsAccount.class);
+                    break;
+
+                case 3:
+                    //all accounts
+                    loggedBank.showAccounts(Account.class);
+                    break;
+                case 4:
+                    return;
+                default:
+                    System.out.println("Invalid input. Please try again.");
+            }
+        }
+
+    }
+
     
     /**
      * Creates new accounts in the system
      * @return void
      */
-    public void newAccounts() {
+    private static void newAccounts() {
         if (!isLogged()) {
             System.out.println("No bank is logged in. Please log in first.");
             return;
         }
         
-        System.out.println("Creating new accounts for bank: " + loggedBank.getName());
-        // Implementation for creating new accounts
+        Main.showMenu(33);
+        Main.setOption();
+
+        switch(Main.getOption()){
+            case 1:
+                //new credit account
+                CreditAccount newCreditAccount = loggedBank.createNewCreditAccount();
+                if (newCreditAccount != null) {
+                    System.out.println("Credit account with account number " + newCreditAccount.getAccountNumber() + " is created successfully!");
+                }
+                break;
+            case 2:
+                //new savings account
+                SavingsAccount newSavingsAccount = loggedBank.createNewSavingsAccount();
+                if (newSavingsAccount != null) {
+                    System.out.println("Savings account with account number " + newSavingsAccount.getAccountNumber() + " is created successfully!");
+                }
+                break;
+            default:
+                System.out.println("Invalid input. Please try again.");
+        }
+
     }
     
     /**
      * Handles the bank login process
      * @return void
      */
-    public void bankLogin() {
+    public static void bankLogin() {
         // Implementation would prompt for bank credentials
         System.out.println("Bank login process initiated.");
     }
@@ -54,7 +117,7 @@ public class BankLauncher {
      * @param b The bank to set as logged in
      * @return void
      */
-    public void setLogSession(Bank b) {
+    public static void setLogSession(Bank b) {
         if (b != null) {
             loggedBank = b;
             System.out.println("Now logged in as: " + b.getName());
@@ -65,7 +128,7 @@ public class BankLauncher {
      * Logs out the current bank session
      * @return void
      */
-    public void logout() {
+    public static void logout() {
         if (isLogged()) {
             System.out.println("Logging out from bank: " + loggedBank.getName());
             loggedBank = null;
@@ -78,7 +141,7 @@ public class BankLauncher {
      * Creates a new bank in the system
      * @return void
      */
-    public void createNewBank() {
+    public static void createNewBank() {
         // Implementation would prompt for bank details
         System.out.println("Creating a new bank in the system.");
     }
@@ -87,7 +150,8 @@ public class BankLauncher {
      * Shows the bank menu for a logged in bank
      * @return void
      */
-    public void showBanksMenu() {
+    
+    public static void showBanksMenu() {
         if (!isLogged()) {
             System.out.println("No bank is logged in. Please log in first.");
             return;
@@ -107,9 +171,9 @@ public class BankLauncher {
      * @param b The bank to add
      * @return void
      */
-    public void addBank(Bank b) {
-        if (b != null && !BANKS.contains(b)) {
-            BANKS.add(b);
+    public static void addBank(Bank b) {
+        if (b != null && !banks.contains(b)) {
+            banks.add(b);
             System.out.println("Bank " + b.getName() + " added to the system.");
         }
     }
@@ -124,8 +188,8 @@ public class BankLauncher {
         // Loop to find bank if it exists using some comparator
 
         for (int i = 0; i < bankSize(); i++) {
-            if (comparator.compare(bank, BANKS.get(i)) == 0) {
-                return BANKS.get(i);
+            if (comparator.compare(bank, banks.get(i)) == 0) {
+                return banks.get(i);
             }
         }
         return null; // Bank not found
@@ -136,10 +200,10 @@ public class BankLauncher {
      * @param accountNum Account number to search for
      * @return Account The found account or null
      */
-    public Account findAccount(String accountNum) {
-        for (Bank bank : BANKS) {
+    public static Account findAccount(String accountNum) {
+        for (Bank bank : banks) {
             for (Account account : bank.getAccount_of_Bank()) {
-                if (account.getACCOUNTNUMBER().equals(accountNum)) {
+                if (account.getAccountNumber().equals(accountNum)) {
                     return account;
                 }
             }
@@ -152,6 +216,6 @@ public class BankLauncher {
      * @return int The number of banks
      */
     public static int bankSize() {
-        return BANKS.size();
+        return banks.size();
     }
 }
